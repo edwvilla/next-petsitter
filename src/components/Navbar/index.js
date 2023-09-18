@@ -1,67 +1,103 @@
-import { Box } from '@mui/material';
-import Typography from '@mui/material/Typography';
-import { NavBar } from './styledComponents';
-import Link from 'next/link';
+import { LinkText, NavBar } from "./styledComponents";
+import { Logout, Search } from "@mui/icons-material";
 
-import MenuIcon from '@mui/icons-material/Menu';
-
-
-const handleLogout = () => {
-    console.log("Logout");
-};
+import { Box } from "@mui/material";
+import Button from "@mui/material/Button";
+import Image from "next/image";
+import MenuIcon from "@mui/icons-material/Menu";
+import Typography from "@mui/material/Typography";
+import UserCard from "@/components/UserCard";
+import { authSelector } from "@/store/reducers/authSlice";
+import { logout } from "@/store/reducers/authSlice";
+import { use } from "react";
+import { useDispatch } from "react-redux";
+import useMediaQuery from "@mui/material/useMediaQuery";
+import { useRouter } from "next/router";
+import { useSelector } from "react-redux";
 
 export default function Navbar() {
-    return (
-        <NavBar position="static">
-            <MenuIcon sx={{ height: "3rem", width: "3rem" }} />
-            <Box sx={{ width: '3rem' }}></Box>
+  const auth = useSelector(authSelector);
+  const isLoggedIn = !!auth.value;
 
-            <Link href={'/'} >
-                <Typography
-                    variant="h6"
-                    component="div"
-                    sx={{
-                        flexGrow: 1,
-                        fontWeight: "bold",
-                        fontSize: "1.5rem",
-                    }}
-                >
-                    CuidaCan
-                </Typography>
-            </Link>
+  const dispatch = useDispatch();
+  const router = useRouter();
 
-            <div style={{ flexGrow: 1 }}></div>
+  const handleLogout = () => {
+    dispatch(logout());
+    router.push("/");
+  };
 
-            {/* {isLoggedIn && <SearchBar sx={{ flexGrow: 10 }} />} */}
-            <div style={{ flexGrow: 1 }}></div>
-            {/* {!isLoggedIn ? ( */}
-            <>
-                <Link href={''} >
-                    Iniciar sesión
-                </Link>
-                <Box sx={{
-                    width: '2px',
-                    height: '40px',
+  const isMd = useMediaQuery((theme) => theme.breakpoints.up("md"));
 
-                    backgroundColor: 'white',
-                    margin: '0 1rem',
+  if (!isMd) {
+    return <MobileNavbar />;
+  }
 
+  return (
+    <NavBar position="static">
+      <MenuIcon
+        sx={{
+          height: "3rem",
+          width: "3rem",
+        }}
+      />
+      <Box sx={{ width: "3rem" }}></Box>
 
-                }}></Box>
+      <LinkText href={"/"}>
+        <Image
+          src="/assets/logo.png"
+          height={50}
+          width={220}
+          objectFit="contain"
+        />
+      </LinkText>
 
+      <div style={{ flexGrow: 1 }}></div>
 
-                <Link href={'/registrate'} >
-                    Regístrate
-                </Link>
-
-            </>
-            {/* ) : (  */}
-            {/* <>
-                        <Button color="inherit" onClick={handleLogout}>
-                            Cerrar sesión
-                        </Button>{" "}
-                    </> */}
-            {/* )} */}
-        </NavBar>
-    )
+      <div style={{ flexGrow: 1 }}></div>
+      {!isLoggedIn ? (
+        <>
+          <LinkText href={"/inicia-sesion"}>Iniciar sesión</LinkText>
+          <Box
+            sx={{
+              width: "2px",
+              height: "40px",
+              backgroundColor: "white",
+              margin: "0 1rem",
+            }}
+          />
+          <LinkText href={"/registrate"}>Regístrate</LinkText>
+        </>
+      ) : (
+        <>
+          <UserCard />
+          <Logout onClick={handleLogout} />
+        </>
+      )}
+    </NavBar>
+  );
 }
+
+const MobileNavbar = () => {
+  return (
+    <NavBar position="static">
+      <MenuIcon
+        sx={{
+          height: "2rem",
+          width: "3rem",
+        }}
+      />
+
+      <LinkText href={"/"}>
+        <Image
+          src="/assets/logo.png"
+          height={30}
+          width={120}
+          objectFit="contain"
+        />
+      </LinkText>
+
+      <Search />
+    </NavBar>
+  );
+};

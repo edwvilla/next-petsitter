@@ -1,24 +1,51 @@
 import { ButtonSignup, Container, Field, Row, Title } from "./styledComponents";
 
-import { Button } from "@mui/material";
+import { Register } from "@/services/authService";
+import { login } from "@/store/reducers/authSlice";
+import { setTokenCookie } from "@/helpers/setCookie";
+import { useDispatch } from "react-redux";
+import { useRouter } from "next/router";
 
 export default function Registrate() {
-  const handleSubmit = (event) => {
+  const router = useRouter();
+  const dispatch = useDispatch();
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
 
-    console.log({
-        firstName: data.get("firstName"),
-        lastName: data.get("lastName"),
-        address: data.get("address"),
-        phone: data.get("phone"),
-        email: data.get("email"),
-        password: data.get("password"),
-    });
-    
+    try {
+      const formData = new FormData(event.currentTarget);
 
-    
-    
+      const data = {
+        name: formData.get("firstName"),
+        lastname: formData.get("lastName"),
+        address: formData.get("address"),
+        phone: formData.get("phone"),
+        email: formData.get("email"),
+        password: formData.get("password"),
+      };
+
+      const res = await Register(data);
+
+      if (res) {
+        dispatch(login(res.data));
+        setTokenCookie(res.data.token);
+        router.push("/cuidadores");
+      }
+
+      console.log(res);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const InputProps = {
+    disableUnderline: true,
+    style: {
+      height: "4.5rem",
+      borderRadius: 20,
+      width: "100%",
+      paddingLeft: 20,
+    },
   };
 
   return (
@@ -32,27 +59,81 @@ export default function Registrate() {
         Crear cuenta
       </Title>
 
-      <Row>
-        <Field label="Nombre (s)" fullWidth  id="firstName" type="firstName" />
-        <Field label="Apellido (s)" fullWidth id="lastName" type="lastName" />
-        <Field label="Dirección" fullWidth id="address" type="address" />
-      </Row>
+      <div
+        style={{
+          display: "flex",
+          flexWrap: "wrap",
+          margin: "0px auto",
+          justifyContent: "space-between",
+        }}
+      >
+        <Field
+          placeholder="Nombre (s)"
+          name="firstName"
+          type="firstName"
+          variant="standard"
+          InputProps={InputProps}
+        />
 
-      <Row>
-        <Field label="Teléfono" fullWidth id="phone" type="tel" />
-        <Field label="Correo" fullWidth id="email" type="email" />
-        <Field label="Contraseña" fullWidth id="password" type="password" />
-      </Row>
+        <Field
+          placeholder="Apellido (s)"
+          name="lastName"
+          type="lastName"
+          variant="standard"
+          InputProps={InputProps}
+        />
+        <Field
+          placeholder="Dirección"
+          name="address"
+          type="address"
+          variant="standard"
+          InputProps={InputProps}
+        />
 
-      <Row>
-        <Field label="Repertir contraseña" fullWidth id="password" type="password" />
-      </Row>
+        <Field
+          name="phone"
+          type="tel"
+          placeholder="Teléfono"
+          variant="standard"
+          InputProps={InputProps}
+        />
 
-      <Row>
-        <ButtonSignup variant="contained" fullWidth onClick={handleSubmit}>
+        <Field
+          placeholder="Correo"
+          name="email"
+          type="email"
+          variant="standard"
+          InputProps={InputProps}
+        />
+        <Field
+          placeholder="Contraseña"
+          name="password"
+          type="password"
+          variant="standard"
+          InputProps={InputProps}
+        />
+
+        <Field
+          placeholder="Repertir contraseña"
+          fullWidth
+          name="password"
+          type="password"
+          InputProps={InputProps}
+        />
+      </div>
+
+      <div
+        style={{
+          width: "100%",
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "flex-end",
+        }}
+      >
+        <ButtonSignup variant="contained" fullWidth type="submit">
           Crear cuenta
         </ButtonSignup>
-      </Row>
+      </div>
     </Container>
   );
 }

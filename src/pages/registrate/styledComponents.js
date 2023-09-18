@@ -1,24 +1,23 @@
+import { Box, TextField } from "@mui/material";
+
 import Button from "@mui/material/Button";
-import { TextField } from "@mui/material";
 import Typography from "@mui/material/Typography";
-import styled from "@mui/material/styles/styled";
+import { styled } from "@mui/material";
 
 export const Field = styled(TextField)(({ theme }) => ({
-  height: "5rem",
+  width: "420px",
   backgroundColor: "white",
   borderRadius: "20px",
-  padding: "0 2rem",
-  marginRight: "2rem",
-  "& fieldset": {
-    border: "none",
-  },
-  "& input": {
-    height: "100%",
-  },
-  textSizeAdjust: "100%",
+  marginBottom: "2rem",
+  fontSize: "2rem",
+  border: "none",
+  "& label": {
+    color:theme.palette.text.field,
+    },
+
 }));
 
-export const Container = styled("div")(({ theme }) => ({
+export const Container = styled(Box)(({ theme }) => ({
   display: "flex",
   flexDirection: "column",
   padding: "10rem",
@@ -40,5 +39,12 @@ export const Row = styled("div")(({ theme }) => ({
 }));
 
 export const ButtonSignup = styled(Button)(({ theme }) => ({
-  height: "3rem",
+  height: "4.5rem",
+  backgroundColor: theme.palette.secondary.main,
+  borderRadius: 20,
+  
+  width: 420,
+  ":hover": {
+    backgroundColor: theme.palette.secondary.light,
+    },
 }));

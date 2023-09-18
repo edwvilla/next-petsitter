@@ -14,10 +14,16 @@
     "@mui/icons-material": "^5.14.8",
     "@mui/material": "^5.14.8",
     "@mui/styled-engine-sc": "^5.14.8",
+    "@reduxjs/toolkit": "^1.9.5",
+    "axios": "^1.5.0",
     "eslint": "8.48.0",
     "eslint-config-next": "13.4.19",
     "next": "^13.4.19",
+    "nookies": "^2.5.2",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "react-redux": "^8.1.2",
+    "react-star-ratings": "^2.3.0",
+    "redux-persist": "^6.0.0"
   }
 }
